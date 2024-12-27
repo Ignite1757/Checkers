@@ -3,16 +3,16 @@
         "Width": 1000, // высота доски
         "Hight": 1000 // ширина доски
     },
-    "Bot": {
-        "IsWhiteBot": false,
-        "IsBlackBot": true,
-        "WhiteBotLevel": 0,
-        "BlackBotLevel": 5,
-        "BotScoringType": "NumberAndPotential",
-        "BotDelayMS": 0,
-        "NoRandom": false,
-        "Optimization": "O1"
-    },
+  "Bot": {
+    "IsWhiteBot": false, // белые - бот
+    "IsBlackBot": true, // черные - бот
+    "WhiteBotLevel": 0, // уроваень белого бота
+    "BlackBotLevel": 5, // уроваень черного бота
+    "BotScoringType": "NumberAndPotential",
+    "BotDelayMS": 0,
+    "NoRandom": false,
+    "Optimization": "O1"
+  },
     "Game": {
         "MaxNumTurns": 120
     }
