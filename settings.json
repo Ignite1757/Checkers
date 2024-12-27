@@ -1,7 +1,7 @@
 {
     "WindowSize": {
-        "Width": 0,
-        "Hight": 0
+        "Width": 1000,
+        "Hight": 1000
     },
     "Bot": {
         "IsWhiteBot": false,
