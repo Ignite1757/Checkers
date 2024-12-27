@@ -9,11 +9,11 @@
     "WhiteBotLevel": 0, // уроваень белого бота
     "BlackBotLevel": 5, // уроваень черного бота
     "BotScoringType": "NumberAndPotential",
-    "BotDelayMS": 0,
+    "BotDelayMS": 0, // задержка хода бота в мс 
     "NoRandom": false,
     "Optimization": "O1"
   },
     "Game": {
-        "MaxNumTurns": 120
+        "MaxNumTurns": 120 // максмальное кол-во ходов партии
     }
 }
