@@ -1,7 +1,7 @@
 {
     "WindowSize": {
-        "Width": 1000,
-        "Hight": 1000
+        "Width": 1001231320, // высота доски
+        "Hight": 1000 // ширина доски
     },
     "Bot": {
         "IsWhiteBot": false,
