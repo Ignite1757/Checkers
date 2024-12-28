@@ -370,7 +370,7 @@ private:
     vector<vector<bool>> is_highlighted_ = vector<vector<bool>>(8, vector<bool>(8, 0));
     // matrix of possible moves
     // 1 - white, 2 - black, 3 - white queen, 4 - black queen
-    vector<vector<POS_T>> mtx = vector<vector<POS_T>>(8, vector<POS_T>(8, 0));
+    vector<vector<POS_T>> mtx = vector<vector<POS_T>>(8, vector<POS_T>(8, 0)); // матрица доски
     // series of beats for each move
     vector<int> history_beat_series;
 };

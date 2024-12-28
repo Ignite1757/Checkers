@@ -5,26 +5,26 @@ using json = nlohmann::json;
 
 #include "../Models/Project_path.h"
 
-class Config
+class Config // обработка настроек игры
 {
   public:
-    Config()
+    Config() // создание настроек
     {
         reload();
     }
 
-    void reload()
+    void reload() // загрузка настроек из файла
     {
-        std::ifstream fin(project_path + "settings.json");
+        std::ifstream fin(project_path + "settings.json"); // путь до .json файла настроек игры
         fin >> config;
         fin.close();
     }
 
-    auto operator()(const string &setting_dir, const string &setting_name) const
+    auto operator()(const string &setting_dir, const string &setting_name) const // получение настройки из setting_dir и setting_name
     {
         return config[setting_dir][setting_name];
     }
 
-  private:
+  private: // сохранение
     json config;
 };

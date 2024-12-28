@@ -9,7 +9,7 @@
 class Hand
 {
   public:
-    Hand(Board *board) : board(board)
+    Hand(Board *board) : board(board) // функционал нажатий
     {
     }
     tuple<Response, POS_T, POS_T> get_cell() const
@@ -18,31 +18,31 @@ class Hand
         Response resp = Response::OK;
         int x = -1, y = -1;
         int xc = -1, yc = -1;
-        while (true)
+        while (true) // бесконечный цикл
         {
-            if (SDL_PollEvent(&windowEvent))
+            if (SDL_PollEvent(&windowEvent)) // ожидаем клик (используется библиотека SDL)
             {
                 switch (windowEvent.type)
                 {
-                case SDL_QUIT:
+                case SDL_QUIT: // событие выхода
                     resp = Response::QUIT;
                     break;
-                case SDL_MOUSEBUTTONDOWN:
+                case SDL_MOUSEBUTTONDOWN: // событие нажатия
                     x = windowEvent.motion.x;
                     y = windowEvent.motion.y;
                     xc = int(y / (board->H / 10) - 1);
                     yc = int(x / (board->W / 10) - 1);
                     if (xc == -1 && yc == -1 && board->history_mtx.size() > 1)
                     {
-                        resp = Response::BACK;
+                        resp = Response::BACK; // нажатие ходы назад
                     }
                     else if (xc == -1 && yc == 8)
                     {
-                        resp = Response::REPLAY;
+                        resp = Response::REPLAY; // нажатие переигровки
                     }
                     else if (xc >= 0 && xc < 8 && yc >= 0 && yc < 8)
                     {
-                        resp = Response::CELL;
+                        resp = Response::CELL; // нажатие на клетку
                     }
                     else
                     {
@@ -50,7 +50,7 @@ class Hand
                         yc = -1;
                     }
                     break;
-                case SDL_WINDOWEVENT:
+                case SDL_WINDOWEVENT: // событие изменения размера окна
                     if (windowEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
                     {
                         board->reset_window_size();
@@ -61,10 +61,10 @@ class Hand
                     break;
             }
         }
-        return {resp, xc, yc};
+        return {resp, xc, yc}; // если нажатие было, то возвращается ответ с координатами или вариант из enum класса
     }
 
-    Response wait() const
+    Response wait() const // в конце игры, ожидаем дальнейших действий
     {
         SDL_Event windowEvent;
         Response resp = Response::OK;
