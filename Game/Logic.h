@@ -16,18 +16,111 @@ class Logic
         optimization = (*config)("Bot", "Optimization");
     }
 
-    vector<move_pos> find_best_turns(const bool color);
+    vector<move_pos> find_best_turns(const bool color) {
+        next_move.clear(); // clear step trace vector
+        next_best_state.clear(); // clear the vector of the best state
+
+        find_first_best_turn(board->get_board(), color, -1, -1, 0);  // fill the cleared vectors
+        vector<move_pos> res; // response vector
+        int state = 0; // start from scratch
+        do { // enter the first state
+            res.push_back(next_move[state]); // adding moves
+            state = next_best_state[state]; // go to the next state
+        } while (state != -1 && next_move[state].x != -1); // check if there was a series of beatings
+        return res; // reached a state where we can't beat
+    }
 
 
 private:
 
 
     double find_first_best_turn(vector<vector<POS_T>> mtx, const bool color, const POS_T x, const POS_T y, size_t state,
-        double alpha = -1);
+        double alpha = -1) {
+        next_move.emplace_back(-1, -1, -1, -1); // add a next step, initially the step is empty
+        next_best_state.emplace_back(-1); // add next state
+        if (state != 0) { // if it’s not 0, it means we’re hitting someone
+            find_turns(x, y, mtx); // found the moves
+        }
+        auto now_turns = turns;// make copies turns
+        auto now_have_beats = beats;// make copies beats
+
+        if (!now_have_beats && state != 0) { // if can't beat
+            return find_best_turns_rec(mts, 1 - color, 0, alpha); // call recursion
+        }
+
+        doble best_score = -1;
+        for (auto turn : now_turns) { // going through the moves
+            size_t new_state = next_move.size();
+            double score;
+            if (now_have_beats) { // if there is someone to beat, we start a series 
+                score = find_first_best_turn(make_turn(mtx, turn), color, turn.x2, turn.y2, new_state, best_score); // continue the series
+            }
+            else // if don’t hit anyone, then we go straight to recursion
+            {
+                score = find_first_best_turn(make_turn(mtx, turn), 1 - color, 0, best_score);
+            }
+            if (score > best_score) { // f the current result is greater than the best, then a new optimum has been found
+                best_score = score;
+                next_move[state] = turn;
+                next_best_state[state] = (now_have_beats ? new_state : -1);
+            }
+        }
+        return best_score; // return the best result
+    }
 
 
     double find_best_turns_rec(vector<vector<POS_T>> mtx, const bool color, const size_t depth, double alpha = -1,
-        double beta = INF + 1, const POS_T x = -1, const POS_T y = -1);
+        double beta = INF + 1, const POS_T x = -1, const POS_T y = -1) {
+        if (depth == Max_depth) {
+            return calc_score(mtx, (depth % 2 == color));
+            //get the moves
+            if (x != -1) { // there is a series of beatings
+                find_turns(x, y, mtx);
+            }
+            else
+            {
+                find_turns(color, mtx);
+            }
+            auto now_turns = turns;
+            auto now_have_beats = heve_beats;
+            if (!now_have_beats && x != -1) {
+                return find_best_turns_rec(mtx, 1 - color, depth + 1, alpha, beta);
+            }
+
+            if (turns.empty()) { // if there are any moves
+                return (depth % 2 ? 0 : INF);
+            } 
+
+            double min_score = INF + 1; // maintain the min
+            double max_score = - 1; // maintain the max
+            for (auto turn : now_turns) {
+                double score;
+                if (now_have_beats) { // there are beatings
+                    score = find_best_turns_rec(make_turn(mtx, turn), color, depth, alpha, beta, turn.x2, turn.y2);
+                }
+                else // no beatings
+                {
+                    score = find_best_turns_rec(make_turn(mtx, turn), 1 - color, depth + 1, alpha, beta);
+                }
+                min_score = min(min_score - score);  // update the min
+                max_score = min(max_score - score); // update the max
+                // alpha-beta
+                if (depth % 2) { // moving the boundaries
+                    alpha = max(alpha, max_score); // we are maximizers and move the left border
+                }
+                else { // else it’s the opponent’s move and he’s a minimizer
+                    beta = min(beta, min_score); // move the right border
+                }
+                if (optimization != 'O0' && alpha > beta) { // condition is not suitable
+                    break;
+                }
+                if (optimization == 'O2' && alpha == beta) { // 
+                    return (depth % 2 ? max_score + 1 : min_score - 1);
+                }
+            }
+            return (depth % 2 ? max_score : min_score);
+        }
+    }
 
 
 
