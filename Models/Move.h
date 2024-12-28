@@ -3,7 +3,7 @@
 
 typedef int8_t POS_T;
 
-struct move_pos // структура хода
+struct move_pos // stroke structure
 {
     POS_T x, y;             // from
     POS_T x2, y2;           // to

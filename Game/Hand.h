@@ -9,7 +9,7 @@
 class Hand
 {
   public:
-    Hand(Board *board) : board(board) // функционал нажатий
+    Hand(Board *board) : board(board) // click functionality
     {
     }
     tuple<Response, POS_T, POS_T> get_cell() const
@@ -18,31 +18,31 @@ class Hand
         Response resp = Response::OK;
         int x = -1, y = -1;
         int xc = -1, yc = -1;
-        while (true) // бесконечный цикл
+        while (true) // endless loop
         {
-            if (SDL_PollEvent(&windowEvent)) // ожидаем клик (используется библиотека SDL)
+            if (SDL_PollEvent(&windowEvent)) // expect a click (uses the SDL library)
             {
                 switch (windowEvent.type)
                 {
-                case SDL_QUIT: // событие выхода
+                case SDL_QUIT: // exit event
                     resp = Response::QUIT;
                     break;
-                case SDL_MOUSEBUTTONDOWN: // событие нажатия
+                case SDL_MOUSEBUTTONDOWN: // click event
                     x = windowEvent.motion.x;
                     y = windowEvent.motion.y;
                     xc = int(y / (board->H / 10) - 1);
                     yc = int(x / (board->W / 10) - 1);
                     if (xc == -1 && yc == -1 && board->history_mtx.size() > 1)
                     {
-                        resp = Response::BACK; // нажатие ходы назад
+                        resp = Response::BACK; // go back event
                     }
                     else if (xc == -1 && yc == 8)
                     {
-                        resp = Response::REPLAY; // нажатие переигровки
+                        resp = Response::REPLAY; // replay game event
                     }
                     else if (xc >= 0 && xc < 8 && yc >= 0 && yc < 8)
                     {
-                        resp = Response::CELL; // нажатие на клетку
+                        resp = Response::CELL; // clicking on a cell event
                     }
                     else
                     {
@@ -50,7 +50,7 @@ class Hand
                         yc = -1;
                     }
                     break;
-                case SDL_WINDOWEVENT: // событие изменения размера окна
+                case SDL_WINDOWEVENT: // window resizing event
                     if (windowEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
                     {
                         board->reset_window_size();
@@ -61,10 +61,10 @@ class Hand
                     break;
             }
         }
-        return {resp, xc, yc}; // если нажатие было, то возвращается ответ с координатами или вариант из enum класса
+        return {resp, xc, yc}; // if there was a click, then a response with coordinates or an option from the enum class is returned
     }
 
-    Response wait() const // в конце игры, ожидаем дальнейших действий
+    Response wait() const // at the end of the game, we expect further actions
     {
         SDL_Event windowEvent;
         Response resp = Response::OK;

@@ -16,7 +16,9 @@
 
 using namespace std;
 
-class Board
+
+
+class Board // drawing the board classs
 {
 public:
     Board() = default;

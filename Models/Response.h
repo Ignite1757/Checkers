@@ -2,9 +2,9 @@
 
 enum class Response
 {
-    OK, // проверка выполнена
-    BACK, // шаг назад
-    REPLAY, // переигровка
-    QUIT, // выход
-    CELL // нажитие на клетку
+    OK, // check completed
+    BACK, // go back
+    REPLAY, // replay game
+    QUIT, // exit the program
+    CELL // clicking on a cell
 };

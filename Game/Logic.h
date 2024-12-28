@@ -31,7 +31,7 @@ private:
 
 
 
-    vector<vector<POS_T>> make_turn(vector<vector<POS_T>> mtx, move_pos turn) const // производит ход на матрице на turn
+    vector<vector<POS_T>> make_turn(vector<vector<POS_T>> mtx, move_pos turn) const // makes a move on the matrix on turn
     {
         if (turn.xb != -1)
             mtx[turn.xb][turn.yb] = 0;
@@ -39,7 +39,7 @@ private:
             mtx[turn.x][turn.y] += 2;
         mtx[turn.x2][turn.y2] = mtx[turn.x][turn.y];
         mtx[turn.x][turn.y] = 0;
-        return mtx; // возвращаем копию матрицы
+        return mtx; // return a copy of the matrix
     }
 
     double calc_score(const vector<vector<POS_T>> &mtx, const bool first_bot_color) const 
@@ -50,10 +50,10 @@ private:
         {
             for (POS_T j = 0; j < 8; ++j)
             {
-                w += (mtx[i][j] == 1); // подсчет кол-ва белых пешек
-                wq += (mtx[i][j] == 3); // подсчет кол-ва белых дамок
-                b += (mtx[i][j] == 2); // подсчет кол-ва черных пешек
-                bq += (mtx[i][j] == 4); // подсчет кол-ва черных дамок
+                w += (mtx[i][j] == 1); // counting the number of white pawns
+                wq += (mtx[i][j] == 3); // counting the number of white queens
+                b += (mtx[i][j] == 2); // counting the number of black pawns
+                bq += (mtx[i][j] == 4); // counting the number of black queens
                 if (scoring_mode == "NumberAndPotential")
                 {
                     w += 0.05 * (mtx[i][j] == 1) * (7 - i);
@@ -61,7 +61,7 @@ private:
                 }
             }
         }
-        if (!first_bot_color) // кто первый ходит, в зависимости от переданного цвета
+        if (!first_bot_color) // who goes first, depending on the color given
         {
             swap(b, w);
             swap(bq, wq);
@@ -75,23 +75,23 @@ private:
         {
             q_coef = 5;
         }
-        return (b + bq * q_coef) / (w + wq * q_coef); // делим кол-во черных на кол-во белых * вес дамки
+        return (b + bq * q_coef) / (w + wq * q_coef); // divide the number of blacks by the number of whites * queen's weight
     }
 
 
 public:
-    void find_turns(const bool color) // ищем все возможные ходы
+    void find_turns(const bool color) // looking for all possible moves
     {
-        find_turns(color, board->get_board()); // ходы для текущей доски
+        find_turns(color, board->get_board()); // moves for the current board
     }
 
     void find_turns(const POS_T x, const POS_T y)
     {
-        find_turns(x, y, board->get_board()); // ходы для доски, которую передали
+        find_turns(x, y, board->get_board()); // moves for the board that was passed
     }
 
 private:
-    void find_turns(const bool color, const vector<vector<POS_T>> &mtx) // приватная функция поиска всех возможных ходов, принимает матрицу состояния и цвет
+    void find_turns(const bool color, const vector<vector<POS_T>> &mtx) // private function for searching all possible moves, takes state matrix and color
     {
         vector<move_pos> res_turns;
         bool have_beats_before = false;
@@ -99,7 +99,7 @@ private:
         {
             for (POS_T j = 0; j < 8; ++j)
             {
-                if (mtx[i][j] && mtx[i][j] % 2 != color) // если клетка совпадает с цветом, то выполняем от этой клетки
+                if (mtx[i][j] && mtx[i][j] % 2 != color) // if the cell matches the color, then execute from this cell
                 {
                     find_turns(i, j, mtx);
                     if (have_beats && !have_beats_before)
@@ -119,7 +119,7 @@ private:
         have_beats = have_beats_before;
     }
 
-    void find_turns(const POS_T x, const POS_T y, const vector<vector<POS_T>> &mtx) // ищем ходы от клетки
+    void find_turns(const POS_T x, const POS_T y, const vector<vector<POS_T>> &mtx) // looking for moves from cell
     {
         turns.clear();
         have_beats = false;
@@ -210,14 +210,14 @@ private:
     }
 
   public:
-    vector<move_pos> turns; // все ходы найденные с помощью find_turns
-    bool have_beats; // флаг, если ди побития
-    int Max_depth; // макисмальная глубина 
+    vector<move_pos> turns; // all turns found using find_turns
+    bool have_beats; // flag, are there any beatings
+    int Max_depth; // maximum depth
 
   private:
     string optimization;
-    vector<move_pos> next_move; // вектор ходов для восстановления последовательности ходов
+    vector<move_pos> next_move; // vector of moves to restore the sequence of moves
     vector<int> next_best_state;
-    Board *board; // указатель на объект класса доски
-    Config *config; // указатель на объект класса конфигурации
+    Board *board; // pointer to a board class object
+    Config *config; // pointer to configuration class object
 };
